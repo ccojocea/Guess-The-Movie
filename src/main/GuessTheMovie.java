@@ -22,6 +22,9 @@ public class GuessTheMovie {
     ArrayList<String> moviesArrayList = new ArrayList();
     
     String movieToGuess;
+    char guess;
+    boolean gameOver = false;
+    int numberOfGuesses = 0;
     
     char[] movieCharArray;
     char[] underscoreCharArray;
@@ -34,6 +37,26 @@ public class GuessTheMovie {
         letsPlay.scanFile();
         letsPlay.chooseRandomMovie(letsPlay.moviesArrayList);
         letsPlay.printInitial();
+        while(!letsPlay.gameOver && letsPlay.numberOfGuesses < 15){
+            letsPlay.getInput();
+        }
+        if(letsPlay.numberOfGuesses == 15){
+            System.out.println("Game over, you failed to guess the movie in 15 tries!");
+        }
+
+    }
+    
+    public void getInput(){
+        System.out.println("Guess a letter: ");
+        scannerInput = new Scanner(System.in);
+        String input = scannerInput.nextLine();
+        
+        if (input.length() == 1){
+            guess = input.charAt(0);
+            printAfterGuesses(guess);
+        } else {
+            System.out.println("Please type only one letter!");
+        }
     }
     
     public void printInitial(){
@@ -43,16 +66,47 @@ public class GuessTheMovie {
             underscoreCharArray[i] = '_';
         }
         System.out.println("You are guessing: " + printCharArrayAsString(underscoreCharArray));
-        System.out.println("Input your first guess: ");
+        
     }
     
     public void printAfterGuesses(char c){
+        numberOfGuesses++;
+        boolean wrong = true;
         for(int i = 0; i < movieToGuess.length(); i++){
             if(movieCharArray[i] == c){
+                wrong = false;
                 underscoreCharArray[i] = c;
             }
         }
+        
+        boolean contains_ = false;
+        for (char ch : underscoreCharArray){
+            if(ch == '_'){
+                contains_ = true;
+                break;
+            }
+        }
+        
+        if(!contains_){
+            System.out.println("Game is over, you have correctly guessed: " + movieToGuess);
+            gameOver = true;
+            return;
+        }
+        
+        if(wrong){
+            wrongCount++;
+            wrongGuesses.add(c);
+        }
+        
+        String wrongGString = "";
+        for(int i = 0; i < wrongGuesses.size(); i++){
+            wrongGString += wrongGuesses.get(i) + " ";
+        }
+        
+        System.out.println("You have used " + numberOfGuesses + " guesses out of " + 15);
+        System.out.println("You have guessed: " + wrongCount + " wrong letters: " + wrongGString);
         System.out.println("You are guessing: " + printCharArrayAsString(underscoreCharArray));
+
     }
     
     public void scanFile(){
