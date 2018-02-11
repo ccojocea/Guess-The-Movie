@@ -70,7 +70,6 @@ public class GuessTheMovie {
     }
     
     public void printAfterGuesses(char c){
-        numberOfGuesses++;
         boolean wrong = true;
         for(int i = 0; i < movieToGuess.length(); i++){
             if(movieCharArray[i] == c){
@@ -94,8 +93,13 @@ public class GuessTheMovie {
         }
         
         if(wrong){
-            wrongCount++;
-            wrongGuesses.add(c);
+            if(!wrongGuesses.contains(c)){
+                numberOfGuesses++;
+                wrongCount++;
+                wrongGuesses.add(c);    
+            } else if (wrongGuesses.contains(c)){
+                System.out.println("You already tried that letter!");
+            }
         }
         
         String wrongGString = "";
